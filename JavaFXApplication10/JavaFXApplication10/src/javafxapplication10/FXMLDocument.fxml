@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="464.0" prefWidth="779.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafxapplication10.FXMLDocumentController">
+    <children>
+        <Button fx:id="button" layoutX="31.0" layoutY="22.0" onAction="#handleButtonAction" prefHeight="39.0" prefWidth="737.0" text="Load Book Data" />
+      <ImageView fx:id="ImageViewField" fitHeight="369.0" fitWidth="237.0" layoutX="517.0" layoutY="77.0" onDragDetected="#handleButtonAction" pickOnBounds="true" preserveRatio="true" />
+      <TextField fx:id="BookField" layoutX="109.0" layoutY="72.0" onAction="#handleButtonAction" prefHeight="39.0" prefWidth="392.0" />
+      <TextField fx:id="AuthorField" layoutX="109.0" layoutY="128.0" onAction="#handleButtonAction" prefHeight="39.0" prefWidth="392.0" />
+      <TextField fx:id="YearField" layoutX="109.0" layoutY="183.0" onAction="#handleButtonAction" prefHeight="39.0" prefWidth="392.0" />
+      <TextField fx:id="CategoryField" layoutX="108.0" layoutY="349.0" onAction="#handleButtonAction" prefHeight="39.0" prefWidth="392.0" />
+      <TextField fx:id="SnippetField" layoutX="109.0" layoutY="288.0" onAction="#handleButtonAction" prefHeight="39.0" prefWidth="392.0" />
+      <TextField fx:id="PublisherField" layoutX="109.0" layoutY="232.0" onAction="#handleButtonAction" prefHeight="39.0" prefWidth="392.0" />
+      <Label layoutX="22.0" layoutY="84.0" text="Book" />
+      <Label layoutX="22.0" layoutY="134.0" text="Author" />
+      <Label layoutX="22.0" layoutY="189.0" text="Year" />
+      <Label layoutX="22.0" layoutY="238.0" text="Publisher" />
+      <Label layoutX="22.0" layoutY="294.0" text="Snippet" />
+      <Label layoutX="17.0" layoutY="349.0" text="Category" />
+      <TextField fx:id="ISBNNumberField" layoutX="108.0" layoutY="402.0" onAction="#handleButtonAction" prefHeight="39.0" prefWidth="392.0" />
+      <Label layoutX="20.0" layoutY="408.0" text="ISBN" />
+      <Label layoutX="453.0" layoutY="394.0" />
+    </children>
+</AnchorPane>
