@@ -86,6 +86,308 @@ public class DatabaseConnector {
        
    };
    
+   private static RecordCollect retrieve(int ISBN_Number) throws Exception {
+       
+      // variable declaration
+      
+      URL url;
+      BufferedReader reader;
+      BufferedWriter writer;
+      String line;
+      
+      
+       //Pattern currently being checked for
+      Pattern titleMatcher = Pattern.compile("\"title\":\\s{0,5}\"([A-Za-z:,-\\s{0,2}]+)\"");
+      
+      //Done
+      Pattern subTitleMatcher = Pattern.compile("\"subtitle\": \"([A-Za-z:,\\s{0,2}]+)\"");
+      //Done
+      Pattern publishedMatcher = Pattern.compile("\"publisher\": \"([A-Za-z:,\\s{0,2}]+)\"");
+      //Done
+      Pattern authorMatcher = Pattern.compile("\"authors\":");
+     // Pattern authorMatcherTwo = Pattern.compile("(\"Eugene\")");
+      //Pattern authorMatcherTwo = Pattern.compile("\"([A-Za-z0-9.]+)\"");
+      Pattern authorMatcherTwo = Pattern.compile("([a-zA-z-]+([ '-][a-zA-Z. ]+[ '-]?[a-zA-Z. ]+))");
+      //Done
+      Pattern publishedDateMatcher = Pattern.compile("\"publishedDate\":\\s{0,2}\"([0-9-]+)\"");
+      
+      Pattern descriptionMatcher = Pattern.compile("\"description\":\\s{0,4}\"([A-Za-z-,. ]{0,75})");
+      Pattern descriptionMatcherTwo = Pattern.compile("\"description\":\\s{0,4}\"([A-Za-z-,. ]{0,25})");
+      //Done
+      Pattern categoriesMatcher = Pattern.compile("\"categories\":\\s{0,2}\\[");
+      Pattern categoriesMatcherTwo = Pattern.compile("\"([A-Za-z\\s{0,2}]+)\"");   
+      //Done
+      Pattern languageMatcher = Pattern.compile("\"language\": \"([A-Za-z:,\\s{0,2}]+)\"");
+      //Done
+      Pattern pageCountMatcher = Pattern.compile("\"pageCount\\s{0,4}\":?\\s{0,2}(\\d{0,6}),");
+      //Done
+      Pattern printTypeMatcher = Pattern.compile("\"printType\":\\s{0,4}\"([A-Za-z]+)\"");
+      //Done
+      Pattern avgRatingsMatcher = Pattern.compile("\"averageRating\":?\\s{0,2}(\\d{0,10}.?\\d{0,2})");
+      //Done
+      Pattern numRatingsMatcher = Pattern.compile("\"ratingsCount\":?\\s{0,2}(\\d{0,10})");
+      //Done
+        Pattern textSnippet = Pattern.compile("\"textSnippet\":\\s{0,4}\"([A-Za-z-&,. ]{0,75})");
+      //Done
+      
+      Pattern isbnMatcher= Pattern.compile("\"type\": \"ISBN_10\",");
+      Pattern isbnMatcherTwo = Pattern.compile("\"identifier\":\\s{0,4}\"(\\d{0,10})\"");
+      //Done
+      
+      Pattern imageMatcher = Pattern.compile("thumbnail\": \"(\\s*.+\\s*)\"");
+      //Done
+      
+      Pattern publisherMatcher = Pattern.compile("\"publisher\\s{0,10}\": \"([A-Za-z-&:,\\s{0,2}]+)\",");
+      //Done
+      
+      Pattern countryMatcher = Pattern.compile("\"country\\s{0,10}\": \"([A-Z:,\\s{0,2}]+)\",");
+      //Done Country Matcher assumes that all text is in capital letters
+      
+      Pattern publicDomainMatcher = Pattern.compile("\"publicDomain\\s{0,10}\":\\s{0,10}([A-Za-z]+),");
+      //Done Country Matcher assumes that all text is in capital letters
+      
+      url = new URL("https://www.googleapis.com/books/v1/volumes?q=isbn:"+ISBN_Number);
+      reader = new BufferedReader(new InputStreamReader(url.openStream()));
+      writer = new BufferedWriter(new FileWriter("data.html"));
+    
+      int x = 0;
+      System.out.println("Hello 1");
+      while ((line = reader.readLine()) != null) {
+          
+         System.out.println("==Hello Hello===>"+line);
+         
+         Matcher matchedTitle = titleMatcher.matcher(line);
+         //System.out.println(line);
+         while ( matchedTitle.find() ) 
+         {
+             System.out.println("matched title");
+             System.out.println(line);
+             System.out.println("============matched ======>"+matchedTitle.group(1));
+             CollectedDate.RecordTitle = matchedTitle.group(1);
+         }
+         
+         Matcher matchedPublisher = publishedMatcher.matcher(line);
+         while ( matchedPublisher.find() ) 
+         {
+             //System.out.println("==================>"+matchedPublisher.group(1));
+             CollectedDate.RecordPublisher = matchedPublisher.group(1);
+         }
+         
+         Matcher matchedSubtitle = subTitleMatcher.matcher(line);
+         while ( matchedSubtitle.find() ) 
+         {
+             //System.out.println("==================>"+matchedSubtitle.group(1));
+             CollectedDate.RecordSubTitle = matchedSubtitle.group(1);
+         }
+        
+         Matcher matchedPublishedDate = publishedDateMatcher.matcher(line);
+         while ( matchedPublishedDate.find() ) 
+         {
+             //System.out.println("==================>"+matchedPublishedDate.group(1));
+             CollectedDate.RecordPublishDate = matchedPublishedDate.group(1);
+         }  
+             
+         Matcher matchedAuthor = authorMatcher.matcher(line);
+         
+         // RegEx for Author Flag
+         // Completed January 26th, 2018.
+         if (FlagNextLine)
+                  {
+                          System.out.println("============123======================>>>>>>>>>>>>>>>>>>>"+line);
+                     //CollectedDate.RecordAuthor = line;
+                     
+                      Matcher matchedAuthortwo = authorMatcherTwo.matcher(line);
+                        while ( matchedAuthortwo.find() ) 
+                        {
+                            System.out.println("}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}");
+                            System.out.println("=====/////////////////=============>"+matchedAuthortwo.group(0));
+                            CollectedDate.RecordAuthor = matchedAuthortwo.group(0);
+                        }
+                   
+                     
+                     FlagNextLine = false;
+                   };
+                   
+         
+         if (matchedAuthor.find()) {FlagNextLine = true;}
+         
+         
+        Matcher matchedDescription = descriptionMatcher.matcher(line);
+       
+         // RegEx for Description Flag
+         // Completed January 28th, 2018.
+         if (FlagDescriptionNextLine)
+                  {
+                         System.out.println("============123======================>>>>>>>>>>>>>>>>>>>"+line);
+                     //CollectedDate.RecordAuthor = line;
+                     
+                      Matcher matchedDescriptionTwo = descriptionMatcherTwo.matcher(line);
+                        while ( matchedDescription.find() ) 
+                        {
+                            System.out.println("}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}");
+                            System.out.println("=====////////*******/////////=============>"+matchedDescription.group(1));
+                            CollectedDate.RecordDescription = matchedDescription.group(1);
+                        }
+                   
+                     
+                     FlagDescriptionNextLine = false;
+                   };
+                   
+         
+         //if (matchedDescription.find()) {FlagDescriptionNextLine  = true;}
+         //System.out.println(line);
+         while ( matchedDescription.find() ) 
+         {
+             //System.out.println("==================>"+matchedDescription.group(1));
+             CollectedDate.RecordDescription = matchedDescription.group(1);
+         }
+         
+         
+         Matcher matchedCategories = categoriesMatcher.matcher(line);
+         
+         // RegEx for Categories Flag
+         // Completed January 28th, 2018.
+         if (FlagCategoriesNextLine)
+                  {
+                     //     System.out.println("============123======================>>>>>>>>>>>>>>>>>>>"+line);
+                     //CollectedDate.RecordAuthor = line;
+                     
+                      Matcher matchedCategoriesTwo = categoriesMatcherTwo.matcher(line);
+                        while ( matchedCategoriesTwo.find() ) 
+                        {
+                           // System.out.println("}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}");
+                            //System.out.println("=====/////////////Categories////=============>"+matchedCategoriesTwo.group(1));
+                            CollectedDate.RecordCategory = matchedCategoriesTwo.group(1);
+                        }
+                   
+                     
+                     FlagCategoriesNextLine = false;
+                   };
+                   
+         
+         
+         if (matchedCategories.find()) {FlagCategoriesNextLine  = true;}
+        
+         Matcher matchedISBN = isbnMatcher.matcher(line);
+         
+         // RegEx for Categories Flag
+         // Completed January 28th, 2018.
+         if (FlagISBNNextLine)
+                  {
+                     //     System.out.println("============123======================>>>>>>>>>>>>>>>>>>>"+line);
+                     //CollectedDate.RecordAuthor = line;
+                     
+                      Matcher matchedISBNTwo = isbnMatcherTwo.matcher(line);
+                        while ( matchedISBNTwo.find() ) 
+                        {
+                           // System.out.println("}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}");
+                           // System.out.println("=====/////////////////=============>"+matchedISBNTwo.group(1));
+                            CollectedDate.RecordISBNNumber = matchedISBNTwo.group(1);
+                        }
+                   
+                     
+                     FlagISBNNextLine = false;
+                   }
+         
+         if (matchedISBN.find()) {FlagISBNNextLine  = true;}
+         
+         Matcher matchedImage = imageMatcher.matcher(line);
+         while ( matchedImage.find() ) 
+         {
+            System.out.println("====================????Omage==================>" + matchedImage.group(1));
+            CollectedDate.RecordImagePointer = matchedImage.group(1);
+         }
+         
+         
+         
+         
+         
+       //  Matcher matchedDescription = descriptionMatcher.matcher(line);
+       //  while ( matchedDescription.find() ) 
+       //  {
+       //     System.out.println("======================================>" + matchedDescription.group(1));
+       //     CollectedDate.RecordDescription = matchedDescription.group(1);
+       //  }
+          
+         
+        
+         Matcher matchedLanguage= languageMatcher.matcher(line);
+         while ( matchedLanguage.find() ) 
+         {
+            //System.out.println("====================????==================>" + matchedLanguage.group(1));
+            CollectedDate.RecordLanguage = matchedLanguage.group(1);
+         }
+         
+         Matcher matchedPageCounter = pageCountMatcher.matcher(line);
+         while ( matchedPageCounter.find() ) 
+         {
+            //System.out.println("=======--------===============================>" + matchedPageCounter.group(1));
+         }
+
+                  
+         Matcher matchedPrintType = printTypeMatcher.matcher(line);
+         while ( matchedPrintType.find() ) 
+         {
+             //System.out.println("====================>>>>==================>" + matchedPrintType.group(1));
+             CollectedDate.RecordPrintMedia = matchedPrintType.group(1);
+         }
+         
+                 
+         Matcher matchedAvgRatings = avgRatingsMatcher.matcher(line);
+         while ( matchedAvgRatings.find() ) 
+         {
+            //System.out.println("=======================\\\\\\\\\\\\\\===============>" + matchedAvgRatings.group(1));
+             CollectedDate.RecordAvgRating = Double.parseDouble(matchedAvgRatings.group(1));
+            //System.out.println("Double--------------------------------------------------------------------------------------------->>>>>"+matchedAvgRatings.group(1));
+            //CollectedDate.RecordAvgRating = Double.parseDouble("4.5");
+         }
+
+         
+         Matcher matchedNumRatings = numRatingsMatcher.matcher(line);
+         while ( matchedNumRatings.find() ) 
+         {
+            //System.out.println("======================================>" + matchedNumRatings.group(1));
+            CollectedDate.RecordNumRatings = Integer.parseInt(matchedNumRatings.group(1));
+            //System.out.println("Integer--------------------------------------------------------------------------------------------->>>>>"+matchedNumRatings.group(1));
+            
+            // CollectedDate.RecordNumRatings = Integer.parseInt("4.5");
+         }
+         
+         
+         Matcher matchedTextSnippet = textSnippet.matcher(line); 
+         while ( matchedTextSnippet.find() ) 
+         {
+             //System.out.println("=======================\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\===============>" + matchedTextSnippet.group(1));
+             CollectedDate.RecordTextSnippet = matchedTextSnippet.group(1);
+         
+         }        
+ 
+        // Matcher matchedIsbn = isbnMatcher.matcher(line); 
+        // while ( matchedIsbn.find() ) 
+        // {
+         //    System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx>" + matchedIsbn.group(1));
+          //   CollectedDate.RecordISBNNumber = matchedIsbn.group(1);
+         //}        
+         
+                  
+         //Matcher matchedImage = imageMatcher.matcher(line); 
+         //while ( matchedImage.find() ) 
+        // {
+         //    System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx>" + matchedImage.group(1));
+        // }
+         
+         //System.out.println(line);
+         writer.write(line);
+         writer.newLine();
+         x++;
+      }
+      //System.out.println(x);
+      reader.close();
+      writer.close();
+      
+      return CollectedDate;
+   }
+   
    public static void store(RecordCollect _bookRecord, String DatabaseName, String TableName)
    {
        try {
@@ -223,18 +525,24 @@ public class DatabaseConnector {
 		}
                 System.out.println(line);
    }
-
-   public static void main(String[] args) throws Exception {
+   
+   public static RecordCollect ISBNretrieve(int ISBN_Number) throws Exception {
        
+      // variable declaration
+      
+      URL url;
+      BufferedReader reader;
+      BufferedWriter writer;
+      String line;
       
       
        //Pattern currently being checked for
-      Pattern titleMatcher = Pattern.compile("\"title\": \"([A-Za-z:,\\s{0,2}]+)\"");
+      Pattern titleMatcher = Pattern.compile("\"title\":\\s{0,2}\"([A-Za-z-&:,\\s{0,2}]+)\"");
       
       //Done
-      Pattern subTitleMatcher = Pattern.compile("\"subtitle\": \"([A-Za-z:,\\s{0,2}]+)\"");
+      Pattern subTitleMatcher = Pattern.compile("\"subtitle\":\\s{0,2}\"([A-Za-z-:,\\s{0,2}]+)\"");
       //Done
-      Pattern publishedMatcher = Pattern.compile("\"publisher\": \"([A-Za-z:,\\s{0,2}]+)\"");
+      Pattern publishedMatcher = Pattern.compile("\"publisher\": \"([A-Za-z-&:,\\s{0,2}]+)\"");
       //Done
       Pattern authorMatcher = Pattern.compile("\"authors\":");
      // Pattern authorMatcherTwo = Pattern.compile("(\"Eugene\")");
@@ -247,7 +555,7 @@ public class DatabaseConnector {
       Pattern descriptionMatcherTwo = Pattern.compile("\"description\":\\s{0,4}\"([A-Za-z-,. ]{0,25})");
       //Done
       Pattern categoriesMatcher = Pattern.compile("\"categories\":\\s{0,2}\\[");
-      Pattern categoriesMatcherTwo = Pattern.compile("\"([a-zA-z]+)\"");   
+      Pattern categoriesMatcherTwo = Pattern.compile("\"([A-Za-z-:&\\s{0,2}]+)\"");   
       //Done
       Pattern languageMatcher = Pattern.compile("\"language\": \"([A-Za-z:,\\s{0,2}]+)\"");
       //Done
@@ -261,24 +569,28 @@ public class DatabaseConnector {
       //Done
         Pattern textSnippet = Pattern.compile("\"textSnippet\":\\s{0,4}\"([A-Za-z-,. ]{0,75})");
       //Done
+      
       Pattern isbnMatcher= Pattern.compile("\"type\": \"ISBN_10\",");
       Pattern isbnMatcherTwo = Pattern.compile("\"identifier\":\\s{0,4}\"(\\d{0,10})\"");
       //Done
-      Pattern imageMatcher = Pattern.compile("thumbnail\": \"(\\s*.+\\s*)\"");
-      Pattern imageMatcherTwo = Pattern.compile("([A-Za-z0-9_!:/.&?=\\s{0,2}]+)");
+      
+      Pattern imageMatcherAgain = Pattern.compile("thumbnail\":\\s{0,10}\"([A-Za-z0-9_!:/.&?=\\s{0,2}]+)\"");
+      //Pattern imageMatcherTwo = Pattern.compile("([A-Za-z0-9_!:/.&?=\\s{0,2}]+)");
       //Done
+      
       Pattern publisherMatcher = Pattern.compile("\"publisher\\s{0,10}\": \"([A-Za-z:,\\s{0,2}]+)\",");
       //Done
+      
       Pattern countryMatcher = Pattern.compile("\"country\\s{0,10}\": \"([A-Z:,\\s{0,2}]+)\",");
       //Done Country Matcher assumes that all text is in capital letters
+      
       Pattern publicDomainMatcher = Pattern.compile("\"publicDomain\\s{0,10}\":\\s{0,10}([A-Za-z]+),");
       //Done Country Matcher assumes that all text is in capital letters
       
-      URL url = new URL("https://www.googleapis.com/books/v1/volumes?q=isbn:1576839168");
-      BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-      BufferedWriter writer = new BufferedWriter(new FileWriter("data.html"));
-      String line;
-      
+      url = new URL("https://www.googleapis.com/books/v1/volumes?q=isbn:"+ISBN_Number);
+      reader = new BufferedReader(new InputStreamReader(url.openStream()));
+      writer = new BufferedWriter(new FileWriter("data.html"));
+    
       int x = 0;
       while ((line = reader.readLine()) != null) {
           
@@ -415,30 +727,305 @@ public class DatabaseConnector {
          
          if (matchedISBN.find()) {FlagISBNNextLine  = true;}
          
-         Matcher matchedImage = imageMatcher.matcher(line);
+         Matcher matchedImage = imageMatcherAgain.matcher(line);
+         while ( matchedImage.find() ) 
+         {
+            System.out.println("hello >>>>>>>>>>>>"+line);
+            System.out.println("====================??Image??==================>" + matchedImage.group(1));
+            System.out.println("====================??Image??==================>" + matchedImage.group(0));
+            CollectedDate.RecordImagePointer = matchedImage.group(1);
+         }
          
          
-         // RegEx for Image Matcher Flag
-         // Completed January 28th, 2018.
-         if (FlagImageNextLine)
+       //  Matcher matchedDescription = descriptionMatcher.matcher(line);
+       //  while ( matchedDescription.find() ) 
+       //  {
+       //     System.out.println("======================================>" + matchedDescription.group(1));
+       //     CollectedDate.RecordDescription = matchedDescription.group(1);
+       //  }
+          
+         
+        
+         Matcher matchedLanguage= languageMatcher.matcher(line);
+         while ( matchedLanguage.find() ) 
+         {
+            //System.out.println("====================????==================>" + matchedLanguage.group(1));
+            CollectedDate.RecordLanguage = matchedLanguage.group(1);
+         }
+         
+         Matcher matchedPageCounter = pageCountMatcher.matcher(line);
+         while ( matchedPageCounter.find() ) 
+         {
+            //System.out.println("=======--------===============================>" + matchedPageCounter.group(1));
+         }
+
+                  
+         Matcher matchedPrintType = printTypeMatcher.matcher(line);
+         while ( matchedPrintType.find() ) 
+         {
+             //System.out.println("====================>>>>==================>" + matchedPrintType.group(1));
+             CollectedDate.RecordPrintMedia = matchedPrintType.group(1);
+         }
+         
+                 
+         Matcher matchedAvgRatings = avgRatingsMatcher.matcher(line);
+         while ( matchedAvgRatings.find() ) 
+         {
+            //System.out.println("=======================\\\\\\\\\\\\\\===============>" + matchedAvgRatings.group(1));
+             CollectedDate.RecordAvgRating = Double.parseDouble(matchedAvgRatings.group(1));
+            //System.out.println("Double--------------------------------------------------------------------------------------------->>>>>"+matchedAvgRatings.group(1));
+            //CollectedDate.RecordAvgRating = Double.parseDouble("4.5");
+         }
+
+         
+         Matcher matchedNumRatings = numRatingsMatcher.matcher(line);
+         while ( matchedNumRatings.find() ) 
+         {
+            //System.out.println("======================================>" + matchedNumRatings.group(1));
+            CollectedDate.RecordNumRatings = Integer.parseInt(matchedNumRatings.group(1));
+            //System.out.println("Integer--------------------------------------------------------------------------------------------->>>>>"+matchedNumRatings.group(1));
+            
+            // CollectedDate.RecordNumRatings = Integer.parseInt("4.5");
+         }
+         
+         
+         Matcher matchedTextSnippet = textSnippet.matcher(line); 
+         while ( matchedTextSnippet.find() ) 
+         {
+             //System.out.println("=======================\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\===============>" + matchedTextSnippet.group(1));
+             CollectedDate.RecordTextSnippet = matchedTextSnippet.group(1);
+         
+         }        
+ 
+        // Matcher matchedIsbn = isbnMatcher.matcher(line); 
+        // while ( matchedIsbn.find() ) 
+        // {
+         //    System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx>" + matchedIsbn.group(1));
+          //   CollectedDate.RecordISBNNumber = matchedIsbn.group(1);
+         //}        
+         
+                  
+         //Matcher matchedImage = imageMatcher.matcher(line); 
+         //while ( matchedImage.find() ) 
+        // {
+         //    System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx>" + matchedImage.group(1));
+        // }
+         
+         //System.out.println(line);
+         writer.write(line);
+         writer.newLine();
+         x++;
+      }
+      //System.out.println(x);
+      reader.close();
+      writer.close();
+      
+      return CollectedDate;
+   }
+   
+
+   public static void main(String[] args) throws Exception {
+       
+      
+      
+       //Pattern currently being checked for
+      Pattern titleMatcher = Pattern.compile("\"title\": \"([A-Za-z:,\\s{0,2}]+)\"");
+      
+      //Done
+      Pattern subTitleMatcher = Pattern.compile("\"subtitle\": \"([A-Za-z:,\\s{0,2}]+)\"");
+      //Done
+      Pattern publishedMatcher = Pattern.compile("\"publisher\": \"([A-Za-z:,\\s{0,2}]+)\"");
+      //Done
+      Pattern authorMatcher = Pattern.compile("\"authors\":");
+     // Pattern authorMatcherTwo = Pattern.compile("(\"Eugene\")");
+      //Pattern authorMatcherTwo = Pattern.compile("\"([A-Za-z0-9.]+)\"");
+      Pattern authorMatcherTwo = Pattern.compile("([a-zA-z-]+([ '-][a-zA-Z. ]+[ '-]?[a-zA-Z. ]+))");
+      //Done
+      Pattern publishedDateMatcher = Pattern.compile("\"publishedDate\":\\s{0,2}\"([0-9-]+)\"");
+      
+      Pattern descriptionMatcher = Pattern.compile("\"description\":\\s{0,4}\"([A-Za-z-,. ]{0,75})");
+      Pattern descriptionMatcherTwo = Pattern.compile("\"description\":\\s{0,4}\"([A-Za-z-,. ]{0,25})");
+      //Done
+      Pattern categoriesMatcher = Pattern.compile("\"categories\":\\s{0,2}\\[");
+      Pattern categoriesMatcherTwo = Pattern.compile("\"([a-zA-z]+)\"");   
+      //Done
+      Pattern languageMatcher = Pattern.compile("\"language\": \"([A-Za-z:,\\s{0,2}]+)\"");
+      //Done
+      Pattern pageCountMatcher = Pattern.compile("\"pageCount\\s{0,4}\":?\\s{0,2}(\\d{0,6}),");
+      //Done
+      Pattern printTypeMatcher = Pattern.compile("\"printType\":\\s{0,4}\"([A-Za-z]+)\"");
+      //Done
+      Pattern avgRatingsMatcher = Pattern.compile("\"averageRating\":?\\s{0,2}(\\d{0,10}.?\\d{0,2})");
+      //Done
+      Pattern numRatingsMatcher = Pattern.compile("\"ratingsCount\":?\\s{0,2}(\\d{0,10})");
+      //Done
+        Pattern textSnippet = Pattern.compile("\"textSnippet\":\\s{0,4}\"([A-Za-z-,. ]{0,75})");
+      //Done
+      Pattern isbnMatcher= Pattern.compile("\"type\": \"ISBN_10\",");
+      Pattern isbnMatcherTwo = Pattern.compile("\"identifier\":\\s{0,4}\"(\\d{0,10})\"");
+      //Done
+      Pattern imageMatcherAgain = Pattern.compile("thumbnail\":\\s{0,10}([A-Za-z0-9_!:/.&?=\\s{0,2}]+)");
+      Pattern imageMatcher = Pattern.compile("thumbnail\":\\s{0,10}([A-Za-z0-9_!:/.&?=\\s{0,2}]+)");
+      Pattern imageMatcherTwo = Pattern.compile("([A-Za-z0-9_!:/.&?=\\s{0,2}]+)");
+      //Done
+      Pattern publisherMatcher = Pattern.compile("\"publisher\\s{0,10}\": \"([A-Za-z:,\\s{0,2}]+)\",");
+      //Done
+      Pattern countryMatcher = Pattern.compile("\"country\\s{0,10}\": \"([A-Z:,\\s{0,2}]+)\",");
+      //Done Country Matcher assumes that all text is in capital letters
+      Pattern publicDomainMatcher = Pattern.compile("\"publicDomain\\s{0,10}\":\\s{0,10}([A-Za-z]+),");
+      //Done Country Matcher assumes that all text is in capital letters
+      
+      URL url = new URL("https://www.googleapis.com/books/v1/volumes?q=isbn:1250153271");
+      BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+      BufferedWriter writer = new BufferedWriter(new FileWriter("data.html"));
+      String line;
+      
+      int x = 0;
+      while ((line = reader.readLine()) != null) {
+         
+         System.out.println("=====out out out>"+line);
+         Matcher matchedTitle = titleMatcher.matcher(line);
+         //System.out.println(line);
+         while ( matchedTitle.find() ) 
+         {
+             System.out.println("==================>"+matchedTitle.group(1));
+             CollectedDate.RecordTitle = matchedTitle.group(1);
+         }
+         
+         Matcher matchedPublisher = publishedMatcher.matcher(line);
+         while ( matchedPublisher.find() ) 
+         {
+             //System.out.println("==================>"+matchedPublisher.group(1));
+             CollectedDate.RecordPublisher = matchedPublisher.group(1);
+         }
+         
+         Matcher matchedSubtitle = subTitleMatcher.matcher(line);
+         while ( matchedSubtitle.find() ) 
+         {
+             //System.out.println("==================>"+matchedSubtitle.group(1));
+             CollectedDate.RecordSubTitle = matchedSubtitle.group(1);
+         }
+        
+         Matcher matchedPublishedDate = publishedDateMatcher.matcher(line);
+         while ( matchedPublishedDate.find() ) 
+         {
+             //System.out.println("==================>"+matchedPublishedDate.group(1));
+             CollectedDate.RecordPublishDate = matchedPublishedDate.group(1);
+         }  
+             
+         Matcher matchedAuthor = authorMatcher.matcher(line);
+         
+         // RegEx for Author Flag
+         // Completed January 26th, 2018.
+         if (FlagNextLine)
                   {
-                     //System.out.println("============123======================>>>>>>>>>>>>>>>>>>>"+line);
+                          System.out.println("============123======================>>>>>>>>>>>>>>>>>>>"+line);
                      //CollectedDate.RecordAuthor = line;
                      
-                      Matcher matchedImageTwo = imageMatcherTwo.matcher(line);
-                        while ( matchedImageTwo.find() ) 
+                      Matcher matchedAuthortwo = authorMatcherTwo.matcher(line);
+                        while ( matchedAuthortwo.find() ) 
                         {
-                            //System.out.println("}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}");
-                            //System.out.println("=====/////////////////=============>"+matchedImageTwo.group(1));
-                            CollectedDate.RecordImagePointer = matchedImageTwo.group(1);
+                            System.out.println("}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}");
+                            System.out.println("=====/////////////////=============>"+matchedAuthortwo.group(0));
+                            CollectedDate.RecordAuthor = matchedAuthortwo.group(0);
                         }
                    
                      
-                     FlagImageNextLine = false;
+                     FlagNextLine = false;
                    };
                    
          
-         if (matchedImage.find()) {FlagImageNextLine  = true;}
+         if (matchedAuthor.find()) {FlagNextLine = true;}
+         
+         
+        Matcher matchedDescription = descriptionMatcher.matcher(line);
+       
+         // RegEx for Description Flag
+         // Completed January 28th, 2018.
+         if (FlagDescriptionNextLine)
+                  {
+                         System.out.println("============123======================>>>>>>>>>>>>>>>>>>>"+line);
+                     //CollectedDate.RecordAuthor = line;
+                     
+                      Matcher matchedDescriptionTwo = descriptionMatcherTwo.matcher(line);
+                        while ( matchedDescription.find() ) 
+                        {
+                            System.out.println("}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}");
+                            System.out.println("=====////////*******/////////=============>"+matchedDescription.group(1));
+                            CollectedDate.RecordDescription = matchedDescription.group(1);
+                        }
+                   
+                     
+                     FlagDescriptionNextLine = false;
+                   };
+                   
+         
+         //if (matchedDescription.find()) {FlagDescriptionNextLine  = true;}
+         //System.out.println(line);
+         while ( matchedDescription.find() ) 
+         {
+             //System.out.println("==================>"+matchedDescription.group(1));
+             CollectedDate.RecordDescription = matchedDescription.group(1);
+         }
+         
+         
+         Matcher matchedCategories = categoriesMatcher.matcher(line);
+         
+         // RegEx for Categories Flag
+         // Completed January 28th, 2018.
+         if (FlagCategoriesNextLine)
+                  {
+                     //     System.out.println("============123======================>>>>>>>>>>>>>>>>>>>"+line);
+                     //CollectedDate.RecordAuthor = line;
+                     
+                      Matcher matchedCategoriesTwo = categoriesMatcherTwo.matcher(line);
+                        while ( matchedCategoriesTwo.find() ) 
+                        {
+                           // System.out.println("}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}");
+                            //System.out.println("=====/////////////Categories////=============>"+matchedCategoriesTwo.group(1));
+                            CollectedDate.RecordCategory = matchedCategoriesTwo.group(1);
+                        }
+                   
+                     
+                     FlagCategoriesNextLine = false;
+                   };
+                   
+         
+         
+         if (matchedCategories.find()) {FlagCategoriesNextLine  = true;}
+        
+         Matcher matchedISBN = isbnMatcher.matcher(line);
+         
+         // RegEx for Categories Flag
+         // Completed January 28th, 2018.
+         if (FlagISBNNextLine)
+                  {
+                     //     System.out.println("============123======================>>>>>>>>>>>>>>>>>>>"+line);
+                     //CollectedDate.RecordAuthor = line;
+                     
+                      Matcher matchedISBNTwo = isbnMatcherTwo.matcher(line);
+                        while ( matchedISBNTwo.find() ) 
+                        {
+                           // System.out.println("}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}");
+                           // System.out.println("=====/////////////////=============>"+matchedISBNTwo.group(1));
+                            CollectedDate.RecordISBNNumber = matchedISBNTwo.group(1);
+                        }
+                   
+                     
+                     FlagISBNNextLine = false;
+                   }
+         
+         if (matchedISBN.find()) {FlagISBNNextLine  = true;}
+         
+         Matcher matchedImage = imageMatcher.matcher(line);
+         while ( matchedImage.find() ) 
+         {
+            //System.out.println("====================????==================>" + matchedLanguage.group(1));
+            CollectedDate.RecordImagePointer = matchedImage.group(1);
+         }
+                   
+         
+         //if (matchedImage.find()) {FlagImageNextLine  = true;}
          
          
        //  Matcher matchedDescription = descriptionMatcher.matcher(line);
@@ -553,7 +1140,7 @@ public class DatabaseConnector {
       google_book_api_reader("data.html","id");
       connect_database("googledb","sqlusergoog","sqluserpw");
       store(CollectedDate,"googledb","adb");
-      
+     
       //System.out.println("hello end");
    }
     

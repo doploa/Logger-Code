@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="636.0" prefWidth="949.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafxapplication10.FXMLController">
+   <children>
+      <TableView fx:id="tableHandle" layoutX="48.0" layoutY="119.0" onSort="#handleButtonActionTwo" prefHeight="457.0" prefWidth="492.0">
+        <columns>
+          <TableColumn fx:id="AuthorHandle" prefWidth="77.0" text="Author" />
+          <TableColumn fx:id="TitleHandle" prefWidth="133.0" text="Title" />
+            <TableColumn fx:id="ISBNHandle" prefWidth="138.0" text="ISBN" />
+        </columns>
+      </TableView>
+      <TextField layoutX="48.0" layoutY="68.0" prefHeight="39.0" prefWidth="492.0" />
+      <ImageView fx:id="ImageViewBookField" fitHeight="157.0" fitWidth="122.0" layoutX="687.0" layoutY="178.0" onDragDetected="#handleButtonActionTwo" pickOnBounds="true" preserveRatio="true" />
+      <TextField fx:id="StudentNameHandle" layoutX="799.0" layoutY="70.0" onAction="#handleButtonActionTwo" prefHeight="5.0" prefWidth="224.0" />
+      <TextField fx:id="StudentNumberHandle" layoutX="799.0" layoutY="119.0" onAction="#handleButtonActionTwo" />
+      <Button fx:id="AddBookBtn" layoutX="48.0" layoutY="584.0" mnemonicParsing="false" onAction="#handleButtonActionTwo" prefHeight="27.0" prefWidth="130.0" text="Add Item" />
+      <Button fx:id="CompleteBorrowingBtn" layoutX="560.0" layoutY="35.0" mnemonicParsing="false" prefHeight="121.0" prefWidth="122.0" text="Complete " />
+      <TextArea layoutX="686.0" layoutY="349.0" prefHeight="30.0" prefWidth="224.0" />
+      <TextArea layoutX="686.0" layoutY="386.0" prefHeight="30.0" prefWidth="224.0" />
+      <TextArea layoutX="687.0" layoutY="422.0" prefHeight="30.0" prefWidth="224.0" />
+      <TextArea layoutX="687.0" layoutY="460.0" prefHeight="30.0" prefWidth="224.0" />
+       
+      <Label layoutX="554.0" layoutY="557.0" text="[F1] New Transaction     [F2] Book Search     [F4] End Session  " />
+      <Label layoutX="560.0" layoutY="351.0" text="Title:" />
+      <Label layoutX="560.0" layoutY="388.0" text="Author:" />
+      <Label layoutX="560.0" layoutY="424.0" text="No of Pages:" />
+      <Label layoutX="560.0" layoutY="462.0" text="Year Published:" />
+      <Label layoutX="562.0" layoutY="498.0" text="ISBN:" />
+      <TextArea layoutX="687.0" layoutY="496.0" prefHeight="30.0" prefWidth="224.0" />
+      <Label layoutX="48.0" layoutY="35.0" text="Book:" underline="true">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="698.0" layoutY="34.0" text="Student:" underline="true">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <MenuButton mnemonicParsing="false" text="MenuButton">
+        <items>
+          <MenuItem mnemonicParsing="false" text="Action 1" />
+          <MenuItem mnemonicParsing="false" text="Action 2" />
+        </items>
+      </MenuButton>
+      <Label layoutX="922.0" layoutY="76.0" />
+      <Label layoutX="699.0" layoutY="76.0" prefHeight="27.0" prefWidth="94.0" text="Name:" />
+      <Label layoutX="699.0" layoutY="125.0" text="Year Group:" />
+   </children>
+</AnchorPane>
